@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<test 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="xsd/Test.xsd"
+strAttr="test string"
+longAttr="123456789"
+boolAttr="true"
+dblAttr="123.456"
+enumAttr="TE_VAL2">
+  <child1 childStrAtt="child string attribute">
+    <subChild3Elems>sub child 3 first</subChild3Elems>
+    <subChild3Elems>sub child 3 second</subChild3Elems>
+    <subChild3Elems>sub child 3 third</subChild3Elems>
+  </child1>
+  <child2 id="child2Id">
+    <shapes>
+      <shape xsi:type="polygon" >
+      <point x="1" y="2"/>
+      <point x="3" y="4"/>
+      <point x="5" y="6"/>
+      </shape>
+      <shape xsi:type="polygon" >
+      <point x="7" y="8"/>
+      <point x="5" y="6"/>
+      <point x="3" y="4"/>
+      <point x="1" y="2"/>
+      </shape>
+      <shape xsi:type="ellipsoid"
+        xRadius="23.4"
+        yRadius="32.1">
+      <center x="1.2" y="2.3"/>
+      </shape>
+    </shapes>
+    <position x="56.7" y="78.9"/>
+  </child2>
+</test>

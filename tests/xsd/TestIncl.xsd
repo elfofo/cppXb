@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="subdir/Types.xsd"/>
+	<xs:complexType name="chid2Definition">
+		<xs:sequence>
+			<xs:element name="shapes">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="shape" type="abstractShape"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="position" type="point2d"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required"/>
+	</xs:complexType>
+</xs:schema>

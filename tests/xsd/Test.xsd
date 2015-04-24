@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="subdir/Types.xsd"/>
+		<xs:include schemaLocation="TestIncl.xsd"/>
+	<xs:complexType name="child1Definition">
+		<xs:sequence>
+			<xs:element name="subChild3Elems" type="xs:string" minOccurs="3" maxOccurs="3"/>
+		</xs:sequence>
+		<xs:attribute name="childStrAtt" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="testDefinition">
+		<xs:sequence>
+			<xs:element name="child1" type="child1Definition" maxOccurs="unbounded"/>
+			<xs:element name="child2" type="chid2Definition" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="strAttr" type="xs:string" use="required"/>
+		<xs:attribute name="longAttr" type="xs:long" use="required"/>
+		<xs:attribute name="boolAttr" type="xs:boolean" use="required"/>
+		<xs:attribute name="dblAttr" type="xs:double" use="required"/>
+		<xs:attribute name="enumAttr" type="testEnum" use="required"/>
+		<xs:attribute name="strAttrOpt" type="xs:string" use="optional" default="default string"/>
+	</xs:complexType>
+	<xs:simpleType name="testEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TE_VAL1"/>
+			<xs:enumeration value="TE_VAL2"/>
+			<xs:enumeration value="TE_VAL3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="test" type="testDefinition"/>
+</xs:schema>

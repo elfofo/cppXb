@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:complexType name="point2d">
+    <xs:attribute name="x" type="xs:double" use="required"/>
+    <xs:attribute name="y" type="xs:double" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="abstractShape"/>
+  <xs:complexType name="polygon">
+    <xs:complexContent>
+      <xs:extension base="abstractShape">
+        <xs:sequence>
+          <xs:element name="point" type="point2d" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ellipsoid">
+    <xs:complexContent>
+      <xs:extension base="abstractShape">
+        <xs:sequence>
+          <xs:element name="center" type="point2d"/>
+        </xs:sequence>
+        <xs:attribute name="xRadius" type="xs:double" use="required"/>
+        <xs:attribute name="yRadius" type="xs:double" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
