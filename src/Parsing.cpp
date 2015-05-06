@@ -12,10 +12,29 @@ using namespace std;
 namespace bpt = boost::property_tree;
 namespace fs = boost::filesystem;
 using bpt::ptree;
+string xsdNS = "xs:";
+string xsdSchema, xsdAttr, xsdComplexType, xsdComplexContent, xsdSequence, xsdElement, xsdExtension, xsdEnum, xsdSimpleType, xsdRestriction, xsdInclude;
+
+void setXSDNameSpace(const std::string & ns)
+{
+	xsdNS = ns;
+	xsdSchema         = ns + "schema";
+	xsdAttr           = ns + "attribute";
+	xsdComplexType    = ns + "complexType";
+	xsdComplexContent = ns + "complexContent";
+	xsdSequence       = ns + "sequence";
+	xsdElement        = ns + "element";
+	xsdExtension      = ns + "extension";
+	xsdEnum           = ns + "enumeration";
+	xsdSimpleType     = ns + "simpleType";
+	xsdRestriction    = ns + "restriction";
+	xsdInclude        = ns + "include";
+}
+
 
 string parseType(const string & type)
 {
-	if (type.find("xs:") == 0) {
+	if (type.find(xsdNS) == 0) {
 		const string baseType = type.substr(3);
 		if (baseType == "boolean") {
 			return "bool";
@@ -83,22 +102,22 @@ Type parseType(const ptree & n);
 void parseContent(const ptree & node, Type & t)
 {
 	BOOST_FOREACH(ptree::value_type const & att, node.get_child("")) {
-		if (att.first == "xs:attribute") {
+		if (att.first == xsdAttr){
 			t.fields.push_back(parseAttribute(att.second));
-		} else if (att.first == "xs:complexContent") {
+		} else if (att.first == xsdComplexContent) {
 			BOOST_FOREACH(ptree::value_type const & ext, att.second.get_child("")) {
-				if (ext.first == "xs:extension") {
+				if (ext.first == xsdExtension) {
 					t.superType = ext.second.get<string>("<xmlattr>.base");
 					parseContent(ext.second, t);
 				}
 			}
-		} else if (att.first == "xs:sequence") {
+		} else if (att.first == xsdSequence) {
 			BOOST_FOREACH(ptree::value_type const & elt, att.second.get_child("")) {
-				if (elt.first == "xs:element") {
+				if (elt.first == xsdElement) {
 					if (elt.second.size() == 1) {
 						t.fields.push_back(parseElement(elt.second));
 					} else {
-						const ptree & nSubT = elt.second.get_child("xs:complexType");
+						const ptree & nSubT = elt.second.get_child(xsdComplexType);
 						Type subT;
 						subT.name = elt.second.get<string>("<xmlattr>.name") + "_t";
 						parseContent(nSubT, subT);
@@ -124,7 +143,7 @@ Enum parseEnum(const string & name, const ptree & n)
 	Enum e;
 	e.name = name;
 	BOOST_FOREACH(ptree::value_type const & val, n.get_child("")) {
-		if (val.first == "xs:enumeration") {
+		if (val.first == xsdEnum) {
 			e.values.push_back(val.second.get<string>("<xmlattr>.value"));
 		}
 	}
@@ -182,18 +201,19 @@ void printType(const Type & t)
 
 InterRep parseFile(const string & filePath)
 {
+	setXSDNameSpace(xsdNS);
 	InterRep rep;
 	rep.name = fs::path(filePath).stem().string();
 	ptree pt;
 	bpt::xml_parser::read_xml(filePath, pt);
 
-	BOOST_FOREACH(ptree::value_type const & n, pt.get_child("xs:schema")) {
-		if (n.first == "xs:complexType") {
+	BOOST_FOREACH(ptree::value_type const & n, pt.get_child(xsdSchema)) {
+		if (n.first == xsdComplexType) {
 			rep.types.push_back(parseType(n.second));
-		} else if (n.first == "xs:simpleType") {
+		} else if (n.first == xsdSimpleType) {
 			const string typeName = n.second.get<string>("<xmlattr>.name");
-			rep.enums.push_back(parseEnum(typeName, n.second.get_child("xs:restriction")));
-		} else if (n.first == "xs:include") {
+			rep.enums.push_back(parseEnum(typeName, n.second.get_child(xsdRestriction)));
+		} else if (n.first == xsdInclude) {
 			fs::path depPath(n.second.get<string>("<xmlattr>.schemaLocation"));
 			string parentPath = depPath.parent_path().string();
 			if (!parentPath.empty()) {

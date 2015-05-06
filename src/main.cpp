@@ -83,6 +83,7 @@ int help()
 	cout << "  -o  : defines both the headers and sources directories" << endl;
 	cout << "  -r  : looks recursively in xsd folder" << endl;
 	cout << "  -f  : generate a flat representation (with no virtual inheritance)" << endl;
+	cout << "  -xs : use <xs:...> instead of <xsd:...>" << endl;
 	cout << " last parameter : xsd file or xsds folder" << endl;
 	return 0;
 }
@@ -128,6 +129,8 @@ int main(int argc, char ** argv)
 				outDirC = argv[i];
 			} else if (arg == "-r") {
 				recursive = true;
+			} else if (arg == "-xs") {
+				setXSDNameSpace("xs:");
 			} else if (arg == "-f" && !gen) {
 				gen.reset(new GenFlat());
 			} else if (arg == "-h") {
